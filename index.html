@@ -1,0 +1,122 @@
+<html>
+<head>
+	<title>Twitter Bootstrap test</title>
+	
+	<!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+	<link href='http://fonts.googleapis.com/css?family=Junge' rel='stylesheet' type='text/css'>
+
+	<link rel="stylesheet" type="text/css" href="./bootstrap/css/bootstrap.min.css">
+	<style type="text/css">
+		body {
+			padding-top: 70px ;
+		}
+	</style>
+	<link rel="stylesheet" type="text/css" href="./bootstrap/css/bootstrap-responsive.min.css">
+
+	<script type="text/javascript"}>
+		function twitterCallback2(twitters) {
+		  var statusHTML = [];
+		  	for (var i=0; i<twitters.length; i++){
+		    var username = twitters[i].user.screen_name;
+		    var userAvatar = twitters[i].user.profile_image_url;
+		    var status = twitters[i].text.replace(/((https?|s?ftp|ssh)\:\/\/[^"\s\<\>]*[^.,;'">\:\s\<\>\)\]\!])/g, function(url) {
+		      return '<a href="'+url+'">'+url+'</a>';
+		    }).replace(/\B@([_a-z0-9]+)/ig, function(reply) {
+		      return  reply.charAt(0)+'<a href="http://twitter.com/'+reply.substring(1)+'">'+reply.substring(1)+'</a>';
+		    });
+		    statusHTML.push('<div class="span4"><div class="well">' +
+		    	'<div class="floating" style="height: 125px;">' +
+      					//'<img src="'+ userAvatar +'" alt="">' +
+		    		 status+' - <a style="font-size:85%" href="http://twitter.com/'+username+'/statuses/'+twitters[i].id_str+'">'+relative_time(twitters[i].created_at)+
+		    						'</a></div></div></div>');
+		  }
+		  document.getElementById('twitter_update_list').innerHTML = statusHTML.join('');
+		}
+
+		function relative_time(time_value) {
+		  var values = time_value.split(" ");
+		  time_value = values[1] + " " + values[2] + ", " + values[5] + " " + values[3];
+		  var parsed_date = Date.parse(time_value);
+		  var relative_to = (arguments.length > 1) ? arguments[1] : new Date();
+		  var delta = parseInt((relative_to.getTime() - parsed_date) / 1000);
+		  delta = delta + (relative_to.getTimezoneOffset() * 60);
+
+		  if (delta < 60) {
+		    return 'less than a minute ago';
+		  } else if(delta < 120) {
+		    return 'about a minute ago';
+		  } else if(delta < (60*60)) {
+		    return (parseInt(delta / 60)).toString() + ' minutes ago';
+		  } else if(delta < (120*60)) {
+		    return 'about an hour ago';
+		  } else if(delta < (24*60*60)) {
+		    return 'about ' + (parseInt(delta / 3600)).toString() + ' hours ago';
+		  } else if(delta < (48*60*60)) {
+		    return '1 day ago';
+		  } else {
+		    return (parseInt(delta / 86400)).toString() + ' days ago';
+		  }
+		}
+	</script>
+
+</head>
+
+<body>
+	<!-- Top navigation -->
+	<div class="navbar navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container">
+				<a class="brand" href="#">Hello Twitter Bootstrap!</a>				
+			</div>
+		</div>
+	</div> <!-- top navigation bar-->
+
+	<!-- body part, main container -->
+	<div class="container">
+
+			<div class="alert alert-info" >
+				<!--
+				<div id="pic" style="margin:1px">
+					<img src="https://twimg0-a.akamaihd.net/profile_images/1791848947/2012-01-30-115425_normal.jpg">
+				</div>
+			-->
+			<h4>Latest tweets </h4> 
+			<a href="https://twitter.com/dineshsimk" class="twitter-follow-button" data-show-count="false">Follow @dineshsimk</a>
+			<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
+			</script>
+			
+			</div>
+
+		
+		<div class="row equal-heights" style="margin-top:31px;">
+			<!-- div, where twitter gets appended--> 
+			<div id="twitter_update_list">
+			</div>
+		</div>
+	
+	<!-- Footer -->	
+	<footer class="footer" style="padding-top:17px;padding-bottom:11px;">
+		<div class="row">
+		<div class="span12">
+		<p class="pull-right">
+			<a href="#">Back to top</a>
+		</p>
+
+		<p>
+			Build using <a href="http://twitter.github.com/bootstrap/index.html" target="_blank">Twitter bootstrap</a> and 
+			<a href="https://dev.twitter.com/docs/api" target="_blank">Twitter API</a>
+		</P>
+		</div>
+		</div>
+	</footer>
+
+	</div>
+	<!-- javascripts -->
+	<script type="text/javascript" src="https://api.twitter.com/1/statuses/user_timeline.json?screen_name=dineshsimk&include_rts=true&count=15&callback=twitterCallback2"></script> 
+
+</body>
+</html>
